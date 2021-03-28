@@ -1,0 +1,24 @@
+
+body{
+    position:relative;
+    left:90px;
+    right:90px;
+    top:90px;
+    bottom: 90px;;
+}
+h1{
+    font-size: xx-large;
+    /* position: absolute; */
+    margin-bottom: 30px;
+    margin-left: 400px;
+}
+
+img{
+    height:350px;
+    width:350px;
+    margin:20px;
+    border:solid black;
+}
+button{
+    padding:14px 120px;
+}
