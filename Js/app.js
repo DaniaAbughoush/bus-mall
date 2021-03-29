@@ -130,7 +130,7 @@ function handelClick(event) {
       votes.push( Products.all[leftIndex].vote++);
     } else {
       totalVote++;
-      Products.all[leftIndex].vote++;
+      Products.all[middleIndex].vote++;
       votes.push( Products.all[middleIndex].vote++);
 
     }
