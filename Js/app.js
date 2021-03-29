@@ -9,8 +9,10 @@ function randomNumber(min, max) {
 let leftIndex;
 let middleIndex;
 let rightIndex;
-let rounds = 25;
+let rounds =25;
 let shownImages = [];
+let views=[];
+let votes=[];
 
 //products name:
 let names = [
@@ -41,7 +43,7 @@ const leftImage = document.getElementById('left');
 const middleImage = document.getElementById('middle');
 const imageSection = document.getElementById('product');
 const finalResult = document.getElementById('finalResult');
-const list = document.getElementById('list');
+
 function Products(name) {
   this.name = name;
   this.path = `./images/${name}.jpg`;
@@ -55,38 +57,9 @@ for (let i = 0; i < names.length; i++) {
   new Products(names[i]);
 }
 
-function checkAvailability(selectedImageName) {
-  for (let i = 0; i < shownImages.length; i++) {
-    if (shownImages[i] === selectedImageName) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-} console.log(checkAvailability());
 
 
-function render() {
-  do {
-    leftIndex = randomNumber(0, Products.all.length - 1);
-    rightIndex = randomNumber(0, Products.all.length - 1);
-    middleIndex = randomNumber(0, Products.all.length - 1);
-   shownImages. push(leftIndex);
-   shownImages. push(leftIndex);
-   shownImages. push(leftIndex);
-   console.log(shownImages);
-
-
-  } while (leftIndex === middleIndex || leftIndex === rightIndex || rightIndex === middleIndex || checkAvailability(leftIndex) || checkAvailability(rightIndex) || checkAvailability(middleIndex));
-  
-  
-
-
-
-
-
-
+function renderImage(){
   leftImage.src = Products.all[leftIndex].path;
   leftImage.alt = Products.all[leftIndex].name;
   leftImage.title = Products.all[leftIndex].name;
@@ -102,13 +75,42 @@ function render() {
   rightImage.alt = Products.all[rightIndex].name;
   rightImage.title = Products.all[rightIndex].name;
   Products.all[rightIndex].view++;
-  
+}
+
+
+
+function render() {
+  do {
+    leftIndex = randomNumber(0, Products.all.length - 1);
+  }while (leftIndex === middleIndex || leftIndex === rightIndex || checkAvailability(leftIndex));
+  do{
+    rightIndex = randomNumber(0, Products.all.length - 1);
+  } while ( leftIndex === rightIndex || rightIndex === middleIndex|| checkAvailability(rightIndex));
+  do {middleIndex = randomNumber(0, Products.all.length - 1);
+  } while (leftIndex === middleIndex || rightIndex === middleIndex || checkAvailability(middleIndex));
+
+  shownImages. push(leftIndex);
+  shownImages. push(rightIndex);
+  shownImages. push(middleIndex);
+  // console.log(shownImages);
+  renderImage();
 }
 render();
 
 
 
+function checkAvailability(selectedImageName) {
+  for (let i = 0; i < shownImages.length; i++) {
+    if (shownImages[i] === selectedImageName) {
+      return true;
+    }
 
+    return false;
+
+  }
+}
+
+// } console.log(checkAvailability());
 
 imageSection.addEventListener('click', handelClick);
 
@@ -120,21 +122,27 @@ function handelClick(event) {
   if (event.target.id !== 'product') {
     if (event.target.id === 'right') {
       totalVote++;
-
       Products.all[rightIndex].vote++;
+      votes.push( Products.all[rightIndex].vote++);
     } else if (event.target.id === 'left') {
       totalVote++;
-
       Products.all[leftIndex].vote++;
+      votes.push( Products.all[leftIndex].vote++);
     } else {
       totalVote++;
       Products.all[leftIndex].vote++;
+      votes.push( Products.all[middleIndex].vote++);
 
-//       
     }
+
+    // for(let i=0;i<names.length;){
+    //   votes.push( Products.all[i].vote);
+    //   console.log(votes);
+    // }
     render();
 
   }
+
 
 
 
@@ -155,62 +163,48 @@ function ProductList() {
   const ulEl = document.createElement('ul');
   container.appendChild(ulEl);
 
-  for (let i = 0; i < names.length; i++) {
 
+  for (let i = 0; i < names.length; i++) {
+    // votes.push(Products.all[i].vote)
     const liEl = document.createElement('li');
     ulEl.appendChild(liEl);
     liEl.textContent = `${Products.all[i].name} had ${Products.all[i].vote} votes, and was seen ${Products.all[i].view} times.`;
+    votes.push(Products.all[i].vote);
+    resultChart();
+
   }
 
   finalResult.removeEventListener('click', ProductList);
+
 }
-// vote.push(Products.all[i].vote);
-// console.log(vote);
-// const container=document.getElementById('list');
 
-// function list(){
-//   for(let i=0;i<names.length;i++){
-//    const liEl=document.createElement('li');
-//    container.appendChild(liEl);
-//    liEl.textContent=(names[i],Products.all);
-//   }
-// }list();
+// console.log(votes);
 
-// function result(){
-//   const container=getElementById('button');
-//   const ulEl=document.createElement('ul');
-//   for(i=0;i<names.length;i++){
-//     const liEl=document.createElement('li')
+function resultChart(){
+  let ctx = document.getElementById('myChart').getContext('2d');
+  let chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'bar',
 
+    // The data for our dataset
+    data: {
+      labels: names,
+      datasets: [{
+        label: 'views',
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        data: shownImages
+      },
+      {
+        label: 'votes',
+        backgroundColor: 'green',
+        borderColor: 'rgb(255, 99, 132)',
+        data: votes
 
-//     liEl.textContent(names[i]+)
+      }]
+    },
 
-//   }
-// }
-
-
-
-// handelClick();
-
-
-
-// if (totalVote >= rounds) {
-//   imageSection.removeEventListener('click', handelClick);
-// }
-// finalResult.addEventListener('click', ProductList);
-
-// function ProductList() {
-
-//   const container = document.getElementById('buttonList');
-//   const ulEl = document.createElement('ul');
-//   container.appendChild(ulEl);
-
-//   for (let i = 0; i < names.length; i++) {
-//     const liEl = document.createElement('li');
-//     ulEl.appendChild(liEl);
-//     liEl.textContent = `${Products.all[i].name} had ${Products.all[i].vote} votes, and was seen ${Products.all[i].view} times.`;
-//   }
-
-//   finalResult.removeEventListener('click', ProductList);
-// }
-// render();
+    // Configuration options go here
+    options: {}
+  });
+}
